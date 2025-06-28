@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>구겜스 태고의 달인 노래 선택</title>
+    <title>구겜스 태고의 달인 노래 선택!</title>
     <style>
         * {
             margin: 0;
@@ -13,168 +13,235 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff6b35, #f7931e, #ffd23f);
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e, #ffa8a8);
             min-height: 100vh;
+            color: #2c2f33;
             overflow-x: hidden;
+            text-align: center;
+        }
+
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: block;
         }
 
         /* 인트로 화면 */
-        #intro {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
+        .intro-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            animation: introFade 3s ease-in-out;
+        }
+
+        .intro-text {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes introFade {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* 토큰 입력 화면 */
+        .token-screen {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-            animation: fadeOut 3s ease-in-out 2s forwards;
-        }
-
-        #intro h1 {
-            color: white;
-            font-size: 3rem;
-            text-align: center;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            animation: bounceIn 1.5s ease-out;
-            margin-bottom: 20px;
-        }
-
-        #api-status {
-            color: white;
-            font-size: 1.2rem;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes fadeOut {
-            to { opacity: 0; visibility: hidden; }
-        }
-
-        /* 메인 컨테이너 */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Discord 스타일 카드 */
-        .card {
             background: #36393f;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-
-        h1, h2 {
             color: white;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        h1 {
-            font-size: 2.5rem;
-            animation: fadeInUp 1s ease-out 3s both;
+        .token-container {
+            background: #2f3136;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
         }
 
-        h2 {
-            font-size: 1.8rem;
+        .token-input {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: none;
+            border-radius: 8px;
+            background: #40444b;
+            color: white;
+            font-size: 16px;
         }
 
-        /* 버튼 스타일 */
+        .token-input::placeholder {
+            color: #72767d;
+        }
+
         .btn {
-            background: #5865f2;
+            background: #ff6b6b;
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 24px;
             border-radius: 8px;
-            font-size: 1.1rem;
             cursor: pointer;
-            margin: 10px;
+            font-size: 16px;
+            font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .btn:hover {
-            background: #4752c4;
+            background: #ff5252;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
-        .btn-main {
-            font-size: 1.3rem;
+        /* 메인 화면 */
+        .main-screen {
+            text-align: center;
+            background: #36393f;
+            color: white;
+            position: relative;
+        }
+
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #40444b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            margin: 100px 0 50px 0;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
             padding: 20px 40px;
-            animation: fadeInUp 1s ease-out 3.5s both;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        /* 장르 버튼 */
+        .main-btn:hover {
+            background: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        /* 장르 선택 화면 */
+        .genre-screen {
+            background: #36393f;
+            color: white;
+            padding: 20px;
+        }
+
+        .genre-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff6b6b;
+        }
+
+        .genre-list {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 0 20px;
+        }
+
         .genre-btn {
+            display: block;
+            width: 100%;
             background: #2f3136;
             color: white;
-            border: 2px solid #5865f2;
-            width: 90%;
-            margin: 10px auto;
-            display: block;
-            text-align: left;
+            border: none;
             padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .genre-btn:hover {
-            background: #5865f2;
-            transform: scale(1.02);
+            background: #ff6b6b;
+            transform: translateX(10px);
         }
 
-        /* 스크롤 컨테이너 */
-        .scroll-container {
-            max-height: 70vh;
+        /* 노래 목록 화면 */
+        .song-screen {
+            background: #36393f;
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .song-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff6b6b;
+        }
+
+        .song-list {
+            max-height: 60vh;
             overflow-y: auto;
-            padding: 10px;
+            padding: 0 20px;
         }
 
-        /* 곡 리스트 아이템 */
         .song-item {
             background: #2f3136;
-            border-radius: 8px;
-            padding: 15px;
             margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            color: white;
-            border-left: 4px solid #5865f2;
         }
 
         .song-number {
-            background: #5865f2;
+            background: #ff6b6b;
             color: white;
+            padding: 5px 10px;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
             margin-right: 15px;
+            font-weight: bold;
         }
 
         .song-text {
             flex: 1;
-            text-align: left;
+            text-align: center;
+            padding: 0 15px;
         }
 
         .song-controls {
@@ -183,44 +250,37 @@
         }
 
         .control-btn {
-            background: #72767d;
+            background: #40444b;
             color: white;
             border: none;
             padding: 8px 12px;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.3s ease;
         }
 
         .control-btn:hover {
-            background: #5865f2;
+            background: #ff6b6b;
         }
 
-        .delete-btn:hover {
-            background: #ed4245;
-        }
-
-        /* 플로팅 버튼 */
-        .floating-btn {
+        .add-btn {
             position: fixed;
             bottom: 30px;
             right: 30px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: #5865f2;
-            color: white;
-            border: none;
             font-size: 2rem;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
-            z-index: 100;
         }
 
-        .floating-btn:hover {
-            background: #4752c4;
+        .add-btn:hover {
+            background: #ff5252;
             transform: scale(1.1);
         }
 
@@ -232,428 +292,316 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 200;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #36393f;
+            background: #2f3136;
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 15px;
+            max-width: 400px;
             width: 90%;
-            max-width: 500px;
             text-align: center;
         }
 
-        .modal input {
+        .modal-input {
             width: 100%;
             padding: 15px;
-            margin: 15px 0;
+            margin: 20px 0;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             background: #40444b;
             color: white;
-            font-size: 1rem;
+            font-size: 16px;
         }
 
-        .modal input:focus {
-            outline: 2px solid #5865f2;
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        /* 화면 전환 */
-        .screen {
-            display: none;
-            animation: fadeInUp 0.5s ease-out;
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #40444b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
-        .screen.active {
-            display: block;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* 로딩 스피너 */
         .loading {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(54, 57, 63, 0.9);
-            padding: 20px 40px;
-            border-radius: 8px;
-            color: white;
-            z-index: 300;
+            background: #2f3136;
+            color: #ff6b6b;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 2000;
         }
 
-        .spinner {
-            border: 3px solid #40444b;
-            border-top: 3px solid #5865f2;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+        .loading.active {
+            display: block;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        /* 반응형 */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .btn-main {
-                font-size: 1.1rem;
-                padding: 15px 30px;
-            }
+        ::-webkit-scrollbar-track {
+            background: #2f3136;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff6b6b;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
+    <!-- 로딩 -->
+    <div class="loading" id="loading">로딩 중...</div>
+
     <!-- 인트로 화면 -->
-    <div id="intro">
-        <h1>구겜스 태고의 달인 노래 선택!</h1>
-        <div id="api-status">GitHub API 연결 확인 중...</div>
+    <div class="screen active" id="introScreen">
+        <div class="intro-screen">
+            <div class="intro-text">구겜스 태고의 달인<br>노래 선택!</div>
+        </div>
+    </div>
+
+    <!-- 토큰 입력 화면 -->
+    <div class="screen" id="tokenScreen">
+        <div class="token-screen">
+            <div class="token-container">
+                <h2>보안 코드 입력</h2>
+                <input type="password" class="token-input" id="tokenInput" placeholder="발급받은 보안 코드를 입력하세요">
+                <button class="btn" onclick="validateToken()">입장하기</button>
+            </div>
+        </div>
     </div>
 
     <!-- 메인 화면 -->
-    <div class="screen active" id="main-screen">
-        <div class="container">
-            <h1>구겜스 태고의 달인 노래 선택!</h1>
-            <button class="btn btn-main" onclick="showGenreScreen()">노래 선택하기</button>
+    <div class="screen" id="mainScreen">
+        <div class="main-screen">
+            <button class="settings-btn" onclick="showSettings()">⚙️ 설정</button>
+            <h1 class="main-title">구겜스 태고의 달인<br>노래 선택!</h1>
+            <button class="main-btn" onclick="showGenres()">노래 선택하기</button>
         </div>
     </div>
 
     <!-- 장르 선택 화면 -->
-    <div class="screen" id="genre-screen">
-        <div class="container">
-            <h2>장르를 선택하세요!</h2>
-            <div class="scroll-container">
-                <button class="genre-btn" onclick="showSongList('jpop')">1. J-POP - ジェイポップ</button>
-                <button class="genre-btn" onclick="showSongList('anime')">2. 애니송 - Anime Song - アニソン</button>
-                <button class="genre-btn" onclick="showSongList('children')">3. 동요 - Children's Song - 童謡</button>
-                <button class="genre-btn" onclick="showSongList('variety')">4. 버라이어티 - Variety - バラエティ</button>
-                <button class="genre-btn" onclick="showSongList('vocaloid')">5. 보컬로이드 - Vocaloid - ボーカロイド</button>
-                <button class="genre-btn" onclick="showSongList('classical')">6. 클래식 - Classical - クラシック</button>
-                <button class="genre-btn" onclick="showSongList('game')">7. 게임 뮤직 - Game Music - ゲームミュージック</button>
-                <button class="genre-btn" onclick="showSongList('namco')">8. 남코 오리지널 - Namco Original - ナムコオリジナル</button>
+    <div class="screen" id="genreScreen">
+        <div class="genre-screen">
+            <button class="back-btn" onclick="showMain()">← 뒤로</button>
+            <h2 class="genre-title">장르를 선택하세요!</h2>
+            <div class="genre-list">
+                <button class="genre-btn" onclick="showSongs('jpop')">1. J-POP - ジェイポップ</button>
+                <button class="genre-btn" onclick="showSongs('anime')">2. 애니송 - Anime Song - アニソン</button>
+                <button class="genre-btn" onclick="showSongs('children')">3. 동요 - Children's Song - 童謡</button>
+                <button class="genre-btn" onclick="showSongs('variety')">4. 버라이어티 - Variety - バラエティ</button>
+                <button class="genre-btn" onclick="showSongs('vocaloid')">5. 보컬로이드 - Vocaloid - ボーカロイド</button>
+                <button class="genre-btn" onclick="showSongs('classical')">6. 클래식 - Classical - クラシック</button>
+                <button class="genre-btn" onclick="showSongs('game')">7. 게임 뮤직 - Game Music - ゲームミュージック</button>
+                <button class="genre-btn" onclick="showSongs('namco')">8. 남코 오리지널 - Namco Original - ナムコオリジナル</button>
             </div>
-            <button class="btn" onclick="showMainScreen()">← 메인으로</button>
         </div>
     </div>
 
-    <!-- 곡 리스트 화면 -->
-    <div class="screen" id="song-screen">
-        <div class="container">
-            <h2 id="genre-title">애니메이션</h2>
-            <div class="scroll-container" id="song-list">
-                <!-- 곡 리스트가 여기에 동적으로 추가됩니다 -->
-            </div>
-            <button class="btn" onclick="showGenreScreen()">← 장르 선택</button>
+    <!-- 노래 목록 화면 -->
+    <div class="screen" id="songScreen">
+        <div class="song-screen">
+            <button class="back-btn" onclick="showGenres()">← 뒤로</button>
+            <h2 class="song-title" id="songScreenTitle">노래 목록</h2>
+            <div class="song-list" id="songList"></div>
+            <button class="add-btn" onclick="showAddModal()">+</button>
         </div>
-        
-        <!-- 플로팅 추가 버튼 -->
-        <button class="floating-btn" onclick="showAddModal()">+</button>
     </div>
 
-    <!-- 곡 추가 모달 -->
-    <div class="modal" id="add-modal">
+    <!-- 노래 추가 모달 -->
+    <div class="modal" id="addModal">
         <div class="modal-content">
-            <h3 style="color: white; margin-bottom: 20px;">새 곡 추가</h3>
-            <input type="text" id="song-input" placeholder="곡 제목을 입력하세요...">
-            <div style="margin-top: 20px;">
+            <h3>새 노래 추가</h3>
+            <input type="text" class="modal-input" id="songInput" placeholder="노래 제목을 입력하세요">
+            <div class="modal-buttons">
                 <button class="btn" onclick="addSong()">추가</button>
-                <button class="btn" style="background: #72767d;" onclick="closeAddModal()">취소</button>
+                <button class="btn" onclick="closeModal()">취소</button>
             </div>
         </div>
     </div>
 
     <!-- 삭제 확인 모달 -->
-    <div class="modal" id="delete-modal">
+    <div class="modal" id="deleteModal">
         <div class="modal-content">
-            <h3 style="color: white; margin-bottom: 20px;">지우시겠습니까?</h3>
-            <div style="margin-top: 20px;">
-                <button class="btn" style="background: #ed4245;" onclick="confirmDelete()">예</button>
-                <button class="btn" style="background: #72767d;" onclick="closeDeleteModal()">아니오</button>
+            <h3>지우시겠습니까?</h3>
+            <div class="modal-buttons">
+                <button class="btn" onclick="confirmDelete()">예</button>
+                <button class="btn" onclick="closeModal()">아니오</button>
             </div>
         </div>
     </div>
 
-    <!-- 로딩 화면 -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <div id="loading-text">처리 중...</div>
+    <!-- 설정 모달 -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h3>설정</h3>
+            <input type="password" class="modal-input" id="newTokenInput" placeholder="새 토큰 입력">
+            <div class="modal-buttons">
+                <button class="btn" onclick="changeToken()">변경</button>
+                <button class="btn" onclick="closeModal()">취소</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 전역 변수
         let currentGenre = '';
+        let currentToken = '';
         let songData = {};
-        let deleteIndex = -1;
-        let githubToken = '';
-        let repoOwner = '';
-        let repoName = '';
-        let fileName = 'taiko-songs.json';
+        let deleteTarget = null;
+        let syncInterval;
 
-        // GitHub 설정
-        const GITHUB_CONFIG = {
-            token: githubToken,
-            owner: 'gusick9316',
-            repo: 'taiko',
-            file: 'taiko-songs.json'
-        };
-
-        // 로컬 저장소 키
-        const LOCAL_STORAGE_KEY = 'taiko_song_data';
-
-        // 장르 이름 매핑
-        const genreNames = {
-            'jpop': 'J-POP',
-            'anime': '애니메이션', 
-            'children': '동요',
-            'variety': '버라이어티',
-            'vocaloid': '보컬로이드',
-            'classical': '클래식',
-            'game': '게임 뮤직',
-            'namco': '남코 오리지널'
-        };
+        const GITHUB_API_BASE = 'https://api.github.com/repos/gusick9316/taiko/contents/';
 
         // 초기화
-        window.addEventListener('load', function() {
+        window.onload = function() {
             setTimeout(() => {
-                
-fetch(`https://raw.githubusercontent.com/gusick9316/taiko/main/api.txt`)
-    .then(res => res.text())
-    .then(token => {
-        githubToken = token.trim();
-        checkGitHubAPI();
-    })
-    .catch(err => {
-        console.error('토큰 불러오기 실패:', err);
-        document.getElementById('api-status').textContent = '토큰 불러오기 실패 - 로컬 모드로 실행';
-    });
+                showScreen('tokenScreen');
+                checkSavedToken();
+            }, 3000);
+        };
 
-            }, 2000);
-        });
+        function checkSavedToken() {
+            const savedToken = localStorage.getItem('taikoToken');
+            if (savedToken) {
+                document.getElementById('tokenInput').value = savedToken;
+                validateToken();
+            }
+        }
 
-        // GitHub API 연결 확인
-        async function checkGitHubAPI() {
-            const statusEl = document.getElementById('api-status');
-            
-            // 로컬 데이터 먼저 로드
-            loadLocalData();
-            
-            if (!GITHUB_CONFIG.owner || GITHUB_CONFIG.owner === 'YOUR_USERNAME_HERE' || 
-                !GITHUB_CONFIG.repo || GITHUB_CONFIG.repo === 'YOUR_REPO_NAME_HERE') {
-                statusEl.textContent = 'GitHub 설정 필요 - 로컬 모드로 실행';
+        async function validateToken() {
+            const token = document.getElementById('tokenInput').value.trim();
+            if (!token) {
+                alert('토큰을 입력해주세요!');
                 return;
             }
 
-            try {
-                statusEl.textContent = 'GitHub API 연결 중...';
-                await loadDataFromGitHub();
-                statusEl.textContent = '연결 성공!';
-                window.useGitHub = true;
-            } catch (error) {
-                console.error('GitHub API 오류:', error);
-                statusEl.textContent = 'GitHub 연결 실패 - 로컬 모드로 실행';
-                window.useGitHub = false;
-            }
-        }
-
-        // 로컬 데이터 로드
-        function loadLocalData() {
-            try {
-                const saved = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-                if (saved) {
-                    songData = saved;
-                } else {
-                    initializeEmptyData();
-                }
-            } catch (error) {
-                console.error('로컬 데이터 로드 오류:', error);
-                initializeEmptyData();
-            }
-        }
-
-        // 로컬에 데이터 저장
-        function saveLocalData() {
-            try {
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(songData));
-            } catch (error) {
-                console.error('로컬 저장 오류:', error);
-            }
-        }
-
-        // GitHub에서 데이터 로드
-        async function loadDataFromGitHub() {
-            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.file}`;
+            showLoading('토큰 확인 중...');
             
             try {
-                const response = await fetch(url, {
+                const response = await fetch('https://api.github.com/user', {
                     headers: {
-                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Authorization': `token ${token}`,
                         'Accept': 'application/vnd.github.v3+json'
                     }
                 });
 
-                if (response.status === 404) {
-                    // 파일이 없으면 새로 생성
-                    await createInitialFile();
-                    return;
+                if (response.ok) {
+                    currentToken = token;
+                    localStorage.setItem('taikoToken', token);
+                    await loadAllData();
+                    startSyncInterval();
+                    showScreen('mainScreen');
+                } else {
+                    alert('잘못된 토큰입니다!');
                 }
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const content = JSON.parse(atob(data.content));
-                
-                // GitHub 데이터와 로컬 데이터 병합
-                mergeSongData(content);
-                window.sha = data.sha; // 업데이트를 위해 SHA 저장
             } catch (error) {
-                console.error('GitHub 데이터 로드 오류:', error);
-                throw error;
+                alert('네트워크 오류가 발생했습니다!');
+            }
+            
+            hideLoading();
+        }
+
+        async function loadAllData() {
+            const genres = ['jpop', 'anime', 'children', 'variety', 'vocaloid', 'classical', 'game', 'namco'];
+            
+            for (const genre of genres) {
+                try {
+                    const response = await fetch(`${GITHUB_API_BASE}${genre}.json`, {
+                        headers: {
+                            'Authorization': `token ${currentToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const content = JSON.parse(atob(data.content));
+                        songData[genre] = content;
+                    } else {
+                        songData[genre] = { songs: [], order: [] };
+                    }
+                } catch (error) {
+                    songData[genre] = { songs: [], order: [] };
+                }
             }
         }
 
-        // 데이터 병합 (로컬과 GitHub 데이터)
-        function mergeSongData(githubData) {
-            // 각 장르별로 병합
-            Object.keys(songData).forEach(genre => {
-                if (githubData[genre]) {
-                    // 중복 제거하면서 병합
-                    const localSongs = songData[genre] || [];
-                    const githubSongs = githubData[genre] || [];
-                    const combined = [...new Set([...localSongs, ...githubSongs])];
-                    songData[genre] = combined;
-                }
-            });
-            
-            // GitHub에 없는 장르도 추가
-            Object.keys(githubData).forEach(genre => {
-                if (!songData[genre]) {
-                    songData[genre] = githubData[genre];
-                }
-            });
-            
-            // 로컬에도 저장
-            saveLocalData();
-        }
-
-        // 초기 파일 생성
-        async function createInitialFile() {
-            const initialData = {
-                jpop: [],
-                anime: [],
-                children: [],
-                variety: [],
-                vocaloid: [],
-                classical: [],
-                game: [],
-                namco: []
-            };
-
-            await saveDataToGitHub(initialData);
-            songData = initialData;
-        }
-
-        // 빈 데이터로 초기화
-        function initializeEmptyData() {
-            songData = {
-                jpop: [],
-                anime: [],
-                children: [],
-                variety: [],
-                vocaloid: [],
-                classical: [],
-                game: [],
-                namco: []
-            };
-        }
-
-        // GitHub에 데이터 저장
-        async function saveDataToGitHub(data) {
-            if (!window.useGitHub) {
-                return; // GitHub 사용 불가시 로컬에만 저장
-            }
-
-            const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.file}`;
+        async function saveGenreData(genre) {
+            const data = songData[genre];
             const content = btoa(JSON.stringify(data, null, 2));
-
-            const payload = {
-                message: 'Update song data',
-                content: content
-            };
-
-            if (window.sha) {
-                payload.sha = window.sha;
-            }
-
+            
             try {
-                const response = await fetch(url, {
+                // 먼저 현재 파일의 SHA 가져오기
+                let sha = null;
+                try {
+                    const getResponse = await fetch(`${GITHUB_API_BASE}${genre}.json`, {
+                        headers: {
+                            'Authorization': `token ${currentToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    if (getResponse.ok) {
+                        const getCurrentData = await getResponse.json();
+                        sha = getCurrentData.sha;
+                    }
+                } catch (e) {}
+
+                const body = {
+                    message: `Update ${genre} songs`,
+                    content: content,
+                    branch: 'main'
+                };
+                
+                if (sha) {
+                    body.sha = sha;
+                }
+
+                const response = await fetch(`${GITHUB_API_BASE}${genre}.json`, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Authorization': `token ${currentToken}`,
                         'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(body)
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                window.sha = result.content.sha; // 새 SHA 저장
+                return response.ok;
             } catch (error) {
-                console.error('GitHub 저장 오류:', error);
-                window.useGitHub = false; // GitHub 실패시 로컬 모드로 전환
-                throw error;
+                console.error('Save error:', error);
+                return false;
             }
         }
 
-        // 데이터 저장 (GitHub + 로컬)
-        async function saveData() {
-            // 항상 로컬에 저장
-            saveLocalData();
-            
-            // GitHub 연결 시 GitHub에도 저장
-            if (window.useGitHub) {
-                try {
-                    await saveDataToGitHub(songData);
-                } catch (error) {
-                    console.error('GitHub 저장 실패, 로컬에만 저장됨');
-                }
-            }
+        function startSyncInterval() {
+            syncInterval = setInterval(async () => {
+                await loadAllData();
+            }, 1000);
         }
 
-        // 화면 전환 함수들
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.remove('active');
@@ -661,159 +609,177 @@ fetch(`https://raw.githubusercontent.com/gusick9316/taiko/main/api.txt`)
             document.getElementById(screenId).classList.add('active');
         }
 
-        function showMainScreen() {
-            showScreen('main-screen');
+        function showMain() {
+            showScreen('mainScreen');
         }
 
-        function showGenreScreen() {
-            showScreen('genre-screen');
+        function showGenres() {
+            showScreen('genreScreen');
         }
 
-        function showSongList(genre) {
+        function showSongs(genre) {
             currentGenre = genre;
-            document.getElementById('genre-title').textContent = genreNames[genre];
-            renderSongList();
-            showScreen('song-screen');
+            const genreNames = {
+                'jpop': 'J-POP',
+                'anime': '애니메이션',
+                'children': '동요',
+                'variety': '버라이어티',
+                'vocaloid': '보컬로이드',
+                'classical': '클래식',
+                'game': '게임 뮤직',
+                'namco': '남코 오리지널'
+            };
+            
+            document.getElementById('songScreenTitle').textContent = genreNames[genre];
+            updateSongList();
+            showScreen('songScreen');
         }
 
-        // 곡 리스트 렌더링
-        function renderSongList() {
-            const listContainer = document.getElementById('song-list');
-            const songs = songData[currentGenre] || [];
+        function updateSongList() {
+            const songList = document.getElementById('songList');
+            const data = songData[currentGenre] || { songs: [], order: [] };
             
-            listContainer.innerHTML = '';
+            songList.innerHTML = '';
             
-            songs.forEach((song, index) => {
-                const songItem = document.createElement('div');
-                songItem.className = 'song-item';
-                songItem.innerHTML = `
-                    <div class="song-number">${index + 1}</div>
-                    <div class="song-text">${song}</div>
-                    <div class="song-controls">
-                        <button class="control-btn" onclick="moveSong(${index}, -1)" ${index === 0 ? 'disabled' : ''}>⬆</button>
-                        <button class="control-btn" onclick="moveSong(${index}, 1)" ${index === songs.length - 1 ? 'disabled' : ''}>⬇</button>
-                        <button class="control-btn delete-btn" onclick="showDeleteModal(${index})">🗑</button>
-                    </div>
-                `;
-                listContainer.appendChild(songItem);
+            data.order.forEach((songId, index) => {
+                const song = data.songs.find(s => s.id === songId);
+                if (song) {
+                    const songItem = document.createElement('div');
+                    songItem.className = 'song-item';
+                    songItem.innerHTML = `
+                        <span class="song-number">${index + 1}</span>
+                        <span class="song-text">${song.text}</span>
+                        <div class="song-controls">
+                            <button class="control-btn" onclick="moveSong(${index}, -1)">⬆</button>
+                            <button class="control-btn" onclick="moveSong(${index}, 1)">⬇</button>
+                            <button class="control-btn" onclick="deleteSong('${song.id}')">🗑️</button>
+                        </div>
+                    `;
+                    songList.appendChild(songItem);
+                }
             });
         }
 
-        // 모달 관련 함수들
         function showAddModal() {
-            document.getElementById('add-modal').style.display = 'block';
-            document.getElementById('song-input').focus();
+            document.getElementById('addModal').classList.add('active');
+            document.getElementById('songInput').value = '';
+            document.getElementById('songInput').focus();
         }
 
-        function closeAddModal() {
-            document.getElementById('add-modal').style.display = 'none';
-            document.getElementById('song-input').value = '';
-        }
-
-        function showDeleteModal(index) {
-            deleteIndex = index;
-            document.getElementById('delete-modal').style.display = 'block';
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('delete-modal').style.display = 'none';
-            deleteIndex = -1;
-        }
-
-        // 곡 추가
         async function addSong() {
-            const input = document.getElementById('song-input');
-            const songTitle = input.value.trim();
-            
-            if (!songTitle) return;
-            
-            showLoading('추가중...');
-            
-            try {
-                if (!songData[currentGenre]) {
-                    songData[currentGenre] = [];
-                }
-                
-                songData[currentGenre].push(songTitle);
-                await saveData();
-                
-                closeAddModal();
-                renderSongList();
-            } catch (error) {
-                console.error('곡 추가 오류:', error);
-                alert('곡 추가 중 오류가 발생했습니다.');
-            } finally {
-                hideLoading();
+            const songText = document.getElementById('songInput').value.trim();
+            if (!songText) {
+                alert('노래 제목을 입력해주세요!');
+                return;
             }
+
+            showLoading('추가 중...');
+            
+            if (!songData[currentGenre]) {
+                songData[currentGenre] = { songs: [], order: [] };
+            }
+            
+            const songId = Date.now().toString();
+            const newSong = { id: songId, text: songText };
+            
+            songData[currentGenre].songs.push(newSong);
+            songData[currentGenre].order.push(songId);
+            
+            await saveGenreData(currentGenre);
+            updateSongList();
+            closeModal();
+            hideLoading();
         }
 
-        // 곡 삭제
+        function deleteSong(songId) {
+            deleteTarget = songId;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
         async function confirmDelete() {
-            if (deleteIndex === -1) return;
+            if (!deleteTarget) return;
             
-            showLoading('삭제중...');
+            showLoading('삭제 중...');
             
-            try {
-                songData[currentGenre].splice(deleteIndex, 1);
-                await saveData();
-                
-                closeDeleteModal();
-                renderSongList();
-            } catch (error) {
-                console.error('곡 삭제 오류:', error);
-                alert('곡 삭제 중 오류가 발생했습니다.');
-            } finally {
-                hideLoading();
-            }
+            const data = songData[currentGenre];
+            data.songs = data.songs.filter(song => song.id !== deleteTarget);
+            data.order = data.order.filter(id => id !== deleteTarget);
+            
+            await saveGenreData(currentGenre);
+            updateSongList();
+            closeModal();
+            hideLoading();
+            deleteTarget = null;
         }
 
-        // 곡 순서 변경
         async function moveSong(index, direction) {
-            const songs = songData[currentGenre];
+            const data = songData[currentGenre];
             const newIndex = index + direction;
             
-            if (newIndex < 0 || newIndex >= songs.length) return;
+            if (newIndex < 0 || newIndex >= data.order.length) return;
             
-            showLoading('수정중...');
+            showLoading('수정 중...');
             
-            try {
-                // 배열 요소 교환
-                [songs[index], songs[newIndex]] = [songs[newIndex], songs[index]];
-                
-                await saveData();
-                renderSongList();
-            } catch (error) {
-                console.error('순서 변경 오류:', error);
-                alert('순서 변경 중 오류가 발생했습니다.');
-            } finally {
-                hideLoading();
-            }
+            [data.order[index], data.order[newIndex]] = [data.order[newIndex], data.order[index]];
+            
+            await saveGenreData(currentGenre);
+            updateSongList();
+            hideLoading();
         }
 
-        // 로딩 표시/숨김
-        function showLoading(text) {
-            document.getElementById('loading-text').textContent = text;
-            document.getElementById('loading').style.display = 'block';
+        function showSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+            document.getElementById('newTokenInput').value = '';
+        }
+
+        function changeToken() {
+            const newToken = document.getElementById('newTokenInput').value.trim();
+            if (!newToken) {
+                alert('새 토큰을 입력해주세요!');
+                return;
+            }
+            
+            localStorage.setItem('taikoToken', newToken);
+            currentToken = newToken;
+            closeModal();
+            alert('토큰이 변경되었습니다!');
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        function showLoading(message) {
+            document.getElementById('loading').textContent = message;
+            document.getElementById('loading').classList.add('active');
         }
 
         function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
+            document.getElementById('loading').classList.remove('active');
         }
 
-        // Enter 키로 곡 추가
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('song-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    addSong();
+        // 모달 외부 클릭 시 닫기
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
                 }
             });
         });
 
-        // 모달 외부 클릭으로 닫기
-        window.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
-            }
+        // Enter 키 이벤트
+        document.getElementById('tokenInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') validateToken();
+        });
+
+        document.getElementById('songInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addSong();
+        });
+
+        document.getElementById('newTokenInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') changeToken();
         });
     </script>
 </body>
