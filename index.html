@@ -275,6 +275,15 @@
             background: #5b6066;
         }
 
+        .youtube-btn {
+            background: #ff0000;
+            color: white;
+        }
+
+        .youtube-btn:hover {
+            background: #cc0000;
+        }
+
         .add-btn {
             position: fixed;
             bottom: 30px;
@@ -475,6 +484,9 @@
                 <div class="input-group">
                     <textarea id="songInput" class="input-field" placeholder="노래 제목을 입력하세요" rows="3"></textarea>
                 </div>
+                <div class="input-group">
+                    <input type="text" id="youtubeLink" class="input-field" placeholder="유튜브 링크 (선택사항)">
+                </div>
                 <button onclick="saveSong()" class="btn">추가</button>
                 <button onclick="closeSongModal()" class="btn btn-secondary">취소</button>
             </div>
@@ -544,6 +556,7 @@
         function showAddSong() {
             document.getElementById('songModalTitle').textContent = '노래 추가';
             document.getElementById('songInput').value = '';
+            document.getElementById('youtubeLink').value = '';
             currentSongIndex = -1;
             document.getElementById('songModal').classList.add('active');
         }
@@ -551,7 +564,17 @@
         function showEditSong(index) {
             document.getElementById('songModalTitle').textContent = '노래 수정';
             const songs = getSongsFromStorage(currentGenre);
-            document.getElementById('songInput').value = songs[index];
+            const songData = songs[index];
+            
+            // 기존 데이터가 문자열인 경우 (이전 버전과의 호환성 유지)
+            if (typeof songData === 'string') {
+                document.getElementById('songInput').value = songData;
+                document.getElementById('youtubeLink').value = '';
+            } else {
+                document.getElementById('songInput').value = songData.title;
+                document.getElementById('youtubeLink').value = songData.youtubeLink || '';
+            }
+            
             currentSongIndex = index;
             document.getElementById('songModal').classList.add('active');
         }
@@ -749,7 +772,18 @@
 
         function getSongsFromStorage(genre) {
             const data = localStorage.getItem(`taiko_${genre}`);
-            return data ? JSON.parse(data) : [];
+            try {
+                const parsed = data ? JSON.parse(data) : [];
+                // 이전 버전과의 호환성을 위해 문자열 배열을 객체 배열로 변환
+                return parsed.map(item => {
+                    if (typeof item === 'string') {
+                        return { title: item, youtubeLink: '' };
+                    }
+                    return item;
+                });
+            } catch (e) {
+                return [];
+            }
         }
 
         async function saveSongsToStorage(genre, songs) {
@@ -775,12 +809,19 @@
             songs.forEach((song, index) => {
                 const songItem = document.createElement('div');
                 songItem.className = 'song-item';
+                
+                // 유튜브 버튼 (링크가 있을 경우만 표시)
+                const youtubeButton = song.youtubeLink ? 
+                    `<button class="control-btn youtube-btn" onclick="window.open('${song.youtubeLink}', '_blank')" title="유튜브 보기">▶️</button>` : 
+                    '';
+                
                 songItem.innerHTML = `
                     <div>
                         <span class="song-number">${index + 1}</span>
-                        ${song}
+                        ${song.title}
                     </div>
                     <div class="song-controls">
+                        ${youtubeButton}
                         <button class="control-btn" onclick="showEditSong(${index})" title="수정">✏️</button>
                         <button class="control-btn" onclick="deleteSong(${index})" title="삭제">🗑️</button>
                         <button class="control-btn" onclick="moveSong(${index}, -1)" title="위로" ${index === 0 ? 'disabled' : ''}>⬆</button>
@@ -799,30 +840,36 @@
                 return;
             }
 
+            const youtubeLink = document.getElementById('youtubeLink').value.trim();
+            const songData = { 
+                title: input,
+                youtubeLink: youtubeLink
+            };
+
             if (currentSongIndex === -1) {
                 // 새 노래 추가
                 showConfirm('추가', '추가를 하시겠습니까?', () => {
-                    addNewSong(input);
+                    addNewSong(songData);
                 });
             } else {
                 // 기존 노래 수정
                 showConfirm('수정', '수정을 하시겠습니까?', () => {
-                    editSong(currentSongIndex, input);
+                    editSong(currentSongIndex, songData);
                 });
             }
         }
 
-        async function addNewSong(songTitle) {
+        async function addNewSong(songData) {
             const songs = getSongsFromStorage(currentGenre);
-            songs.push(songTitle);
+            songs.push(songData);
             await saveSongsToStorage(currentGenre, songs);
             renderSongs();
             closeSongModal();
         }
 
-        async function editSong(index, newTitle) {
+        async function editSong(index, newData) {
             const songs = getSongsFromStorage(currentGenre);
-            songs[index] = newTitle;
+            songs[index] = newData;
             await saveSongsToStorage(currentGenre, songs);
             renderSongs();
             closeSongModal();
@@ -922,4 +969,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
